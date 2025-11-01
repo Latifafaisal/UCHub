@@ -4,7 +4,7 @@
   "description": "Your full-stack Node.js application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js" 
+    "start": "node app.js" 
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.19",
