@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Home - UChub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+  <style>
+    /* ===== Reset & Base ===== */
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body { 
+      background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+      color: #111827;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      width: 100%;
+      background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
+    }
+    
+    .navbar a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .navbar a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: left 0.3s ease;
+    }
+    
+    .navbar a:hover::before {
+      left: 0;
+    }
+    
+    .navbar a:hover { 
+      transform: translateY(-2px);
+    }
+    
+    .navbar i { 
+      font-size: 1.5rem;
+    }
+
+    /* ===== Hero Banner ===== */
+    .hero-banner {
+      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+      color: #FFFFFF;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-20px) translateX(20px); }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .hero-banner p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    /* ===== Container ===== */
+    .home-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    /* ===== Tabs ===== */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: #FFFFFF;
+      padding: 0.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #111827;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .tab:hover {
+      background: #F3F4F6;
+    }
+    
+    .tab.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ===== Posts Sections ===== */
+    .posts-section { 
+      display: none; 
+      flex-direction: column; 
+      gap: 1.5rem;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .posts-section.active { 
+      display: flex; 
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Post Card ===== */
+    .post-card {
+      background: #FFFFFF;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      border: 1px solid #E5E7EB;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .post-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #2563EB 0%, #1E3A8A 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .post-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+    }
+    
+    .post-card:hover::before {
+      transform: scaleY(1);
+    }
+    
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #F3F4F6;
+    }
+    
+    .post-header img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #2563EB;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    }
+    
+    .post-info {
+      flex: 1;
+    }
+    
+    .post-header h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1E3A8A;
+      margin-bottom: 2px;
+    }
+    
+    .post-header span {
+      font-size: 0.85rem;
+      color: #6B7280;
+      font-weight: 400;
+    }
+
+    .post-content {
+      color: #374151;
+      line-height: 1.6;
+    }
+    
+    .post-content p { 
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+    
+    .post-content img,
+    .post-content video {
+      width: 100%;
+      max-height: 450px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-top: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* ===== Event Card Specific ===== */
+    .event-card .post-header {
+      background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: -0.5rem -0.5rem 1rem -0.5rem;
+      border-bottom: none;
+    }
+    
+    .event-card .post-header h4 {
+      font-size: 1.2rem;
+      color: #1E3A8A;
+    }
+    
+    .event-location {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0.75rem 0;
+      padding: 0.75rem;
+      background: #F3F4F6;
+      border-radius: 8px;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .event-location i {
+      color: #2563EB;
+    }
+
+    .event-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .event-info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F3F4F6;
+      padding: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .event-info-item i {
+      color: #2563EB;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* ===== Button Styles ===== */
+    .btn {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6B7280;
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      color: #D1D5DB;
+      margin-bottom: 1rem;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+    
+    .empty-state p {
+      font-size: 1rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero-banner h1 {
+        font-size: 1.8rem;
+      }
+      
+      .hero-banner p {
+        font-size: 0.95rem;
+      }
+      
+      .navbar {
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .navbar a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+      
+      .navbar i {
+        font-size: 1.2rem;
+      }
+      
+      .tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .tab {
+        padding: 0.75rem 1rem;
+      }
+      
+      .post-header h4 { 
+        font-size: 1rem; 
+      }
+      
+      .post-header span { 
+        font-size: 0.75rem; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="toast-container"></div>
+  <div id="flash-data" data-flash='<%- JSON.stringify(flash || {}) %>' style="display:none"></div>
+
+  <!-- ===== Navbar ===== -->
+  <div class="navbar">
+    <a href="/student/<%= user.id %>/home">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="/student/<%= user.id %>/clubs">
+      <i class="fas fa-layer-group"></i>
+      <span>Clubs</span>
+    </a>
+    <a href="/student/<%= user.id %>">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </div>
+
+  <!-- ===== Hero Banner ===== -->
+  <div class="hero-banner">
+    <div class="hero-content">
+      <h1>Welcome to UChub</h1>
+      <p>Discover, connect, and engage with your university community</p>
+    </div>
+  </div>
+
+  <div class="home-container">
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="all">
+        <i class="fas fa-globe"></i> All Clubs
+      </div>
+      <div class="tab" data-tab="subscribed">
+        <i class="fas fa-star"></i> My Clubs
+      </div>
+      <div class="tab" data-tab="events">
+        <i class="fas fa-list"></i> Events
+      </div>
+      <div class="tab" data-tab="calendar">
+        <i class="fas fa-calendar-alt"></i> Calendar
+      </div>
+    </div>
+
+    <!-- All Clubs Posts -->
+    <div class="posts-section active" id="all">
+      <% if (allPosts.length > 0) { %>
+        <% allPosts.forEach(post => { %>
+        <div class="post-card">
+          <div class="post-header">
+            <img src="<%= post.clubProfilePic || '/images/default-club.png' %>" alt="Club Profile">
+            <div class="post-info">
+              <h4><%= post.clubName %></h4>
+              <span><i class="far fa-clock"></i> <%= post.timeAgo %></span>
+            </div>
+          </div>
+          <div class="post-content">
+            <% if(post.text) { %><p><%= post.text %></p><% } %>
+            <% if(post.image) { %><img src="<%= post.image %>" alt="Post Image"><% } %>
+            <% if(post.video) { %>
+              <video controls>
+                <source src="<%= post.video %>" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            <% } %>
+          </div>
+        </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>No Posts Yet</h3>
+          <p>Check back later for updates from clubs.</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Subscribed Clubs Posts -->
+    <div class="posts-section" id="subscribed">
+      <% if (subPosts && subPosts.length) { %>
+        <% subPosts.forEach(post => { %>
+        <div class="post-card">
+          <div class="post-header">
+            <img src="<%= post.clubProfilePic || '/images/default-club.png' %>" alt="Club Profile">
+            <div class="post-info">
+              <h4><%= post.clubName || ('Club #' + post.clubId) %></h4>
+              <span><i class="far fa-clock"></i> <%= new Date(post.createdAt).toLocaleString() %></span>
+            </div>
+          </div>
+          <div class="post-content">
+            <% if(post.text) { %><p><%= post.text %></p><% } %>
+            <% if(post.image) { %><img src="<%= post.image %>" alt="Post Image"><% } %>
+            <% if(post.video) { %>
+              <video controls>
+                <source src="<%= post.video %>" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            <% } %>
+          </div>
+        </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-star"></i>
+          <h3>No Subscriptions Yet</h3>
+          <p>Visit the Clubs page to subscribe to your favorite clubs and see their updates here.</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Upcoming Events from Subscribed Clubs -->
+    <div class="posts-section" id="events">
+      <% if (upcomingSubscribedEvents && upcomingSubscribedEvents.length) { %>
+        <% upcomingSubscribedEvents.forEach(e => { %>
+          <div class="post-card event-card">
+            <div class="post-header">
+              <div class="post-info">
+                <h4><%= e.title %></h4>
+                <span><i class="far fa-calendar"></i> <%= e.startsAt ? new Date(e.startsAt).toLocaleString() : '' %></span>
+              </div>
+            </div>
+            <div class="event-info">
+              <% if (e.activityType) { %>
+                <div class="event-info-item">
+                  <i class="fas fa-cubes"></i>
+                  <span><strong>Activity Type:</strong> <%= e.activityType %></span>
+                </div>
+              <% } %>
+              <% if (e.targetAudience) { %>
+                <div class="event-info-item">
+                  <i class="fas fa-users"></i>
+                  <span><strong>Target Audience:</strong> <%= e.targetAudience %></span>
+                </div>
+              <% } %>
+              <% if (e.expectedAttendees) { %>
+                <div class="event-info-item">
+                  <i class="fas fa-user-check"></i>
+                  <span><strong>Expected Attendees:</strong> <%= e.expectedAttendees %></span>
+                </div>
+              <% } %>
+              <% if (e.location) { %>
+                <div class="event-info-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span><strong>Location:</strong> <%= e.location %></span>
+                </div>
+              <% } %>
+            </div>
+            <form method="POST" action="/student/<%= user.id %>/events/<%= e.id %>/rsvp" style="margin-top:1rem;">
+              <input type="hidden" name="status" value="going"/>
+              <button class="btn" type="submit">
+                <i class="fas fa-check-circle"></i> RSVP Going
+              </button>
+            </form>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-calendar-times"></i>
+          <h3>No Upcoming Events</h3>
+          <p>No upcoming events from your subscriptions at the moment.</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Calendar -->
+    <div class="posts-section" id="calendar">
+      <div id='calendar-view' style="background: #FFFFFF; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08);"></div>
+    </div>
+  </div>
+
+  <script id="events-data" type="application/json"><%- JSON.stringify(allUpcomingEvents) %></script>
+
+  <script>
+    const rawEvents = JSON.parse(document.getElementById('events-data').textContent);
+
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.posts-section');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-tab');
+        sections.forEach(sec => {
+          sec.classList.remove('active');
+          if(sec.id === target) {
+            setTimeout(() => sec.classList.add('active'), 50);
+            if(target === 'calendar') {
+              setTimeout(() => initCalendar(), 100);
+            }
+          }
+        });
+      });
+    });
+
+    function initCalendar() {
+      try {
+        console.log('initCalendar called');
+        console.log('rawEvents:', rawEvents);
+        if (document.getElementById('calendar-view')._calendar) return; // already initialized
+        const events = rawEvents.map(e => ({
+          title: e.title,
+          start: e.startsAt,
+          end: e.endsAt,
+          extendedProps: {
+            description: e.description,
+            location: e.location,
+            activityType: e.activityType,
+            targetAudience: e.targetAudience,
+            clubName: e.club ? e.club.username : 'Unknown'
+          }
+        }));
+
+        console.log('processed events:', events);
+        if (events.length === 0) {
+          // Add demo event to test
+          events.push({
+            title: 'Demo Event',
+            start: new Date().toISOString(),
+            end: null,
+            extendedProps: {
+              description: 'This is a demo event',
+              location: 'Demo Location',
+              activityType: 'Workshop',
+              targetAudience: 'Students',
+              clubName: 'Demo Club'
+            }
+          });
+        }
+        console.log('final events:', events);
+        const calendarEl = document.getElementById('calendar-view');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: events,
+          eventClick: function(info) {
+            const props = info.event.extendedProps;
+            const startTime = new Date(info.event.start).toLocaleString();
+            const endTime = info.event.end ? new Date(info.event.end).toLocaleString() : 'TBD';
+            alert(`Event: ${info.event.title}\nStart: ${startTime}\nEnd: ${endTime}\nLocation: ${props.location || 'TBD'}\nActivity Type: ${props.activityType || 'N/A'}\nTarget Audience: ${props.targetAudience || 'N/A'}\nClub: ${props.clubName}\nDescription: ${props.description || 'N/A'}`);
+          },
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          height: 600 // fixed height
+        });
+        calendar.render();
+        calendarEl._calendar = calendar;
+        console.log('calendar rendered');
+      } catch(e) {
+        alert('Calendar init error: ' + e.message);
+        console.error(e);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      const flash = JSON.parse(document.getElementById("flash-data").dataset.flash || '{}');
+      if (flash && (flash.error || flash.message)) {
+        showToast(flash.error ? flash.error : flash.message, flash.error ? 'error' : 'success');
+      }
+    });
+    function showToast(msg, type) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + (type === 'error' ? 'toast-error' : 'toast-success');
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(() => { toast.classList.add('show'); }, 100);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+      }, 3400);
+    }
+  </script>
+  <style>
+    #toast-container { z-index:9999; position:fixed; top:32px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; }
+    .toast { opacity:0; min-width:250px; margin-top:12px; padding: 1em 2em; border-radius: 8px; background: #2563eb; color: #fff; box-shadow:0 4px 16px rgba(0,0,0,0.12); font-weight:500; transition:opacity 0.4s, transform 0.4s; transform:translateY(-25px) scale(0.95); transition:all 0.4s; pointer-events:none; }
+    .toast.show { opacity: 1; transform:translateY(0) scale(1); }
+    .toast-error { background:#e11d48; }
+    .toast-success { background:#16a34a; }
+  </style>
+</body>
+</html>
