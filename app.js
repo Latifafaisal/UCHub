@@ -5,6 +5,7 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const fs = require("fs");
+<<<<<<< HEAD
 const User = require("./models/user");
 const Post = require("./models/post");
 const { sequelize } = require("./config/database");
@@ -98,6 +99,13 @@ require("dotenv").config();
 const app = express();
 const http = require("http");
 const socketio = require("socket.io");
+=======
+const { User } = require("./models/user");
+const { Post } = require("./models/post");
+const { sequelize } = require("./config/database");
+
+const app = express();
+>>>>>>> c8d1fd0 (Initial commit)
 
 // ===== Middleware =====
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -106,12 +114,16 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+<<<<<<< HEAD
 // ===== Session & Middleware Inits =====
+=======
+>>>>>>> c8d1fd0 (Initial commit)
 app.use(
   session({
     secret: "clubhub-secret",
     resave: false,
     saveUninitialized: false,
+<<<<<<< HEAD
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours absolute max
       httpOnly: true,
@@ -145,6 +157,11 @@ app.use((req, res, next) => {
   next();
 });
 
+=======
+  })
+);
+
+>>>>>>> c8d1fd0 (Initial commit)
 // ===== File Upload Setup =====
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -164,6 +181,7 @@ function requireLogin(req, res, next) {
   next();
 }
 
+<<<<<<< HEAD
 // Utility for setting req.session.flash
 function setFlash(req, type, message) {
   req.session.flash = req.session.flash || {};
@@ -186,6 +204,8 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds ago";
 }
 
+=======
+>>>>>>> c8d1fd0 (Initial commit)
 // ===== Routes =====
 
 // Home redirect
@@ -196,6 +216,7 @@ app.get("/", (req, res) => {
     else if (req.session.user.role === "club")
       return res.redirect(`/club/${req.session.user.id}`);
     else if (req.session.user.role === "admin")
+<<<<<<< HEAD
       return res.redirect(`/admin/dashboard`);
     else if (req.session.user.role === "dean")
       return res.redirect(`/dean/dashboard`);
@@ -212,11 +233,23 @@ app.get("/signup", (req, res) =>
 );
 
 app.post("/signup", upload.single("clubLogo"), async (req, res) => {
+=======
+      return res.redirect(`/admin/${req.session.user.id}`);
+  }
+  res.redirect("/login");
+});
+
+// ===== Signup =====
+app.get("/signup", (req, res) => res.render("signup", { error: null }));
+
+app.post("/signup", async (req, res) => {
+>>>>>>> c8d1fd0 (Initial commit)
   const { role } = req.body;
   let username, email, password, confirmPassword, profileData;
 
   try {
     if (role === "student") {
+<<<<<<< HEAD
       // === Student signup ===
       const {
         fullName,
@@ -224,6 +257,9 @@ app.post("/signup", upload.single("clubLogo"), async (req, res) => {
         studentPassword,
         studentConfirmPassword,
       } = req.body;
+=======
+      const { fullName, studentEmail, studentPassword, studentConfirmPassword } = req.body;
+>>>>>>> c8d1fd0 (Initial commit)
       email = studentEmail.trim().toLowerCase();
       username = fullName.trim();
       password = studentPassword;
@@ -239,6 +275,7 @@ app.post("/signup", upload.single("clubLogo"), async (req, res) => {
         cv: "",
       };
 
+<<<<<<< HEAD
       if (!email) {
         setFlash(req, "error", "Invalid email!");
         return res.redirect("/signup");
@@ -324,11 +361,19 @@ app.post("/signup", upload.single("clubLogo"), async (req, res) => {
         clubPassword,
         clubConfirmPassword,
       } = req.body;
+=======
+      if (!/^\d{9}@psu\.edu\.sa$/.test(email))
+        return res.render("signup", { error: "Invalid PSU email format!" });
+
+    } else if (role === "club") {
+      const { clubName, clubEmail, clubDescription, representativeName, clubPassword, clubConfirmPassword } = req.body;
+>>>>>>> c8d1fd0 (Initial commit)
       email = clubEmail.trim().toLowerCase();
       username = clubName.trim();
       password = clubPassword;
       confirmPassword = clubConfirmPassword;
 
+<<<<<<< HEAD
       const passwordOk = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(password);
       if (!passwordOk) {
         setFlash(
@@ -482,6 +527,53 @@ app.get("/verify-email", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.render("login", { error: "Something went wrong!" });
+=======
+      profileData = {
+        clubName: username,
+        clubDescription,
+        representativeName,
+        email,
+        phone: "",
+        linkedin: "",
+        instagram: "",
+        tiktok: "",
+        x: "",
+      };
+    } else {
+      return res.render("signup", { error: "Please select a role" });
+    }
+
+    if (password.length < 8)
+      return res.render("signup", { error: "Password must be at least 8 characters!" });
+    if (password !== confirmPassword)
+      return res.render("signup", { error: "Passwords do not match!" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      profile_data: profileData,
+    });
+
+    req.session.user = {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role,
+      profile_data: newUser.profile_data,
+    };
+
+    if (role === "student") res.redirect(`/student/${newUser.id}/home`);
+    else res.redirect(`/club/${newUser.id}`);
+  } catch (err) {
+    console.error(err);
+    if (err.name === "SequelizeUniqueConstraintError")
+      return res.render("signup", { error: "Email already exists!" });
+    res.render("signup", { error: "Something went wrong!" });
+>>>>>>> c8d1fd0 (Initial commit)
   }
 });
 
@@ -494,6 +586,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ where: { email } });
+<<<<<<< HEAD
     if (!user) {
       setFlash(req, "error", "User not found!");
       return res.redirect("/login");
@@ -509,6 +602,12 @@ app.post("/login", async (req, res) => {
       setFlash(req, "error", "Invalid credentials!");
       return res.redirect("/login");
     }
+=======
+    if (!user) return res.render("login", { error: "User not found!" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.render("login", { error: "Invalid credentials!" });
+>>>>>>> c8d1fd0 (Initial commit)
 
     req.session.user = {
       id: user.id,
@@ -517,6 +616,7 @@ app.post("/login", async (req, res) => {
       role: user.role,
       profile_data: user.profile_data,
     };
+<<<<<<< HEAD
     setFlash(req, "message", "Logged in successfully!");
     if (user.role === "student")
       return res.redirect(`/student/${user.id}/home`);
@@ -598,12 +698,25 @@ app.post("/reset-password", async (req, res) => {
   });
 });
 
+=======
+
+    if (user.role === "student") res.redirect(`/student/${user.id}/home`);
+    else if (user.role === "club") res.redirect(`/club/${user.id}`);
+    else if (user.role === "admin") res.redirect(`/admin/${user.id}`);
+  } catch (err) {
+    console.error(err);
+    res.render("login", { error: "Something went wrong!" });
+  }
+});
+
+>>>>>>> c8d1fd0 (Initial commit)
 // ===== Logout =====
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/login");
 });
 
+<<<<<<< HEAD
 // Admin - view pending club requests
 app.get("/admin/club-requests", requireLogin, async (req, res) => {
   if (req.session.user.role !== "admin")
@@ -891,13 +1004,29 @@ app.get("/student/:id/messages", requireLogin, async (req, res) => {
     return res.status(404).send("Student not found");
 
   res.render("studentMessages", { user });
+=======
+// ===== Student Home =====
+app.get("/student/:id/home", requireLogin, async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  if (!user || user.role !== "student") return res.status(404).send("Student not found");
+
+  const allPosts = await Post.findAll({
+    order: [["createdAt", "DESC"]],
+  });
+
+  res.render("homepage", { user, allPosts });
+>>>>>>> c8d1fd0 (Initial commit)
 });
 
 // ===== Student Profile =====
 app.get("/student/:id", requireLogin, async (req, res) => {
   const user = await User.findByPk(req.params.id);
+<<<<<<< HEAD
   if (!user || user.role !== "student")
     return res.status(404).send("Student not found");
+=======
+  if (!user || user.role !== "student") return res.status(404).send("Student not found");
+>>>>>>> c8d1fd0 (Initial commit)
 
   res.render("studentProfile", { user, posts: [] });
 });
@@ -905,6 +1034,7 @@ app.get("/student/:id", requireLogin, async (req, res) => {
 // ===== Club Profile =====
 app.get("/club/:id", requireLogin, async (req, res) => {
   const user = await User.findByPk(req.params.id);
+<<<<<<< HEAD
   if (!user || user.role !== "club")
     return res.status(404).send("Club not found");
 
@@ -1697,6 +1827,46 @@ app.post(
     }
   }
 );
+=======
+  if (!user || user.role !== "club") return res.status(404).send("Club not found");
+
+  const posts = await Post.findAll({
+    where: { clubId: user.id },
+    order: [["createdAt", "DESC"]],
+  });
+
+  res.render("clubProfile", { user, posts });
+});
+
+// ===== Add Post (Club only) =====
+app.post("/club/:id/addPost", requireLogin, upload.single("media"), async (req, res) => {
+  try {
+    const club = await User.findByPk(req.params.id);
+    if (!club || club.role !== "club") return res.status(403).send("Invalid club");
+
+   const text = req.body.content?.trim() || ""; // matches your textarea name
+
+    let image = null;
+let video = null;
+
+if (req.file) {
+  console.log("Uploaded file:", req.file); // debug
+  if (req.file.mimetype.startsWith("image/")) image = "/uploads/" + req.file.filename;
+  else if (req.file.mimetype.startsWith("video/")) video = "/uploads/" + req.file.filename;
+}
+
+
+    await Post.create({ clubId: club.id, text, image, video });
+    res.redirect(`/club/${club.id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+>>>>>>> c8d1fd0 (Initial commit)
 // ===== Update Profile =====
 app.post(
   "/updateProfile",
@@ -1710,6 +1880,7 @@ app.post(
       const user = await User.findByPk(req.session.user.id);
       if (!user) return res.redirect("/login");
 
+<<<<<<< HEAD
       // Common file validations
       const picFile = req.files["profilePic"]?.[0];
       if (picFile) {
@@ -1764,6 +1935,19 @@ app.post(
         user.profile_data = {
           ...(user.profile_data || {}),
           fullName: safeFullName,
+=======
+      if (user.role === "student") {
+        const { fullName, bio, phone, linkedin } = req.body;
+
+        const profilePic =
+          req.files["profilePic"]?.[0]?.path.replace(/\\/g, "/") || user.profile_data.profilePic;
+        const cv =
+          req.files["cv"]?.[0]?.path.replace(/\\/g, "/") || user.profile_data.cv;
+
+        user.profile_data = {
+          ...user.profile_data,
+          fullName,
+>>>>>>> c8d1fd0 (Initial commit)
           bio,
           phone,
           linkedin,
@@ -1771,7 +1955,11 @@ app.post(
           cv,
         };
 
+<<<<<<< HEAD
         user.username = safeFullName;
+=======
+        user.username = fullName;
+>>>>>>> c8d1fd0 (Initial commit)
       } else if (user.role === "club") {
         const {
           clubName,
@@ -1785,6 +1973,7 @@ app.post(
           x,
         } = req.body;
 
+<<<<<<< HEAD
         // normalize existing stored path
         let existingPic = user.profile_data && user.profile_data.profilePic;
         if (existingPic && !existingPic.startsWith("/uploads/")) {
@@ -1801,6 +1990,11 @@ app.post(
         user.profile_data = {
           ...(user.profile_data || {}),
           clubName: safeClubName,
+=======
+        user.profile_data = {
+          ...user.profile_data,
+          clubName,
+>>>>>>> c8d1fd0 (Initial commit)
           clubDescription,
           representativeName,
           email,
@@ -1809,10 +2003,16 @@ app.post(
           instagram,
           tiktok,
           x,
+<<<<<<< HEAD
           profilePic,
         };
 
         user.username = safeClubName;
+=======
+        };
+
+        user.username = clubName;
+>>>>>>> c8d1fd0 (Initial commit)
       }
 
       await user.save();
@@ -1822,6 +2022,7 @@ app.post(
         username: user.username,
         profile_data: user.profile_data,
       };
+<<<<<<< HEAD
       if (user.role === "student") {
         res.redirect(`/student/${user.id}`);
       } else if (user.role === "club") {
@@ -1829,6 +2030,10 @@ app.post(
       } else {
         res.redirect(`/admin/dashboard`);
       }
+=======
+
+      res.redirect(user.role === "student" ? `/student/${user.id}` : `/club/${user.id}`);
+>>>>>>> c8d1fd0 (Initial commit)
     } catch (err) {
       console.error(err);
       res.send("Something went wrong!");
@@ -1836,6 +2041,7 @@ app.post(
   }
 );
 
+<<<<<<< HEAD
 // ===== Dean Profile =====
 app.get("/dean/dashboard", requireLogin, async (req, res) => {
   const user = await User.findByPk(req.session.user.id);
@@ -2049,10 +2255,17 @@ app.get("/admin/dashboard", requireLogin, async (req, res) => {
   const user = await User.findByPk(req.session.user.id);
   if (!user || user.role !== "admin")
     return res.status(404).send("Admin not found");
+=======
+// ===== Admin Profile =====
+app.get("/admin/:id", requireLogin, async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  if (!user || user.role !== "admin") return res.status(404).send("Admin not found");
+>>>>>>> c8d1fd0 (Initial commit)
 
   const studentCount = await User.count({ where: { role: "student" } });
   const clubCount = await User.count({ where: { role: "club" } });
   const postsCount = await Post.count();
+<<<<<<< HEAD
   const recentLogs = await AuditLog.findAll({
     order: [["createdAt", "DESC"]],
     limit: 10,
@@ -2064,6 +2277,15 @@ app.get("/admin/dashboard", requireLogin, async (req, res) => {
     ],
     order: [["startsAt", "ASC"]],
   });
+=======
+
+  // Add this array so EJS has something to loop through
+  const recentActions = [
+    "Added new club: AI & Robotics Club",
+    "Approved student subscription: Coding Club",
+    "Created new event: Hackathon 2025"
+  ];
+>>>>>>> c8d1fd0 (Initial commit)
 
   res.render("adminProfile", {
     user,
@@ -2072,6 +2294,7 @@ app.get("/admin/dashboard", requireLogin, async (req, res) => {
       clubs: clubCount,
       posts: postsCount,
     },
+<<<<<<< HEAD
     recentLogs,
     allEvents,
   });
@@ -2725,12 +2948,19 @@ io.on("connection", async (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
+=======
+    recentActions, // <-- pass it here
+  });
+});
+
+>>>>>>> c8d1fd0 (Initial commit)
 
 // ===== Start Server =====
 (async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connected!");
+<<<<<<< HEAD
     await sequelize.sync({ alter: true }); // Update table structure
     console.log("All models synced!");
 
@@ -2740,18 +2970,34 @@ io.on("connection", async (socket) => {
 
     if (!admin) {
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASS, 10);
+=======
+    await sequelize.sync({ alter: true });
+    console.log("All models synced!");
+
+    // Seed default admin
+    const adminEmail = "admin@clubhub.com";
+    let admin = await User.findOne({ where: { email: adminEmail } });
+
+    if (!admin) {
+      const hashedPassword = await bcrypt.hash("Admin1234!", 10);
+>>>>>>> c8d1fd0 (Initial commit)
       admin = await User.create({
         username: "Super Admin",
         email: adminEmail,
         password: hashedPassword,
+<<<<<<< HEAD
         verificationToken: crypto.randomBytes(20).toString("hex"),
         role: "admin",
         isVerified: true,
+=======
+        role: "admin",
+>>>>>>> c8d1fd0 (Initial commit)
         profile_data: { fullName: "Super Admin" },
       });
       console.log("Default admin created!");
     }
 
+<<<<<<< HEAD
     // Seed default dean
     const deanEmail = process.env.DEAN_EMAIL;
     let dean = await User.findOne({ where: { email: deanEmail } });
@@ -2773,6 +3019,9 @@ io.on("connection", async (socket) => {
     server.listen(3000, () =>
       console.log("Server running at http://localhost:3000")
     );
+=======
+    app.listen(3000, () => console.log("Server running at http://localhost:3000"));
+>>>>>>> c8d1fd0 (Initial commit)
   } catch (err) {
     console.error("Database connection error:", err);
   }

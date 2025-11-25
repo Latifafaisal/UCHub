@@ -25,11 +25,14 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+<<<<<<< HEAD
     status: {
       type: DataTypes.ENUM('pending', 'approved', 'rejected'),
       defaultValue: 'pending',
       allowNull: false,
     },
+=======
+>>>>>>> c8d1fd0 (Initial commit)
   },
   {
     tableName: "posts",
@@ -37,4 +40,8 @@ const Post = sequelize.define(
   }
 );
 
+<<<<<<< HEAD
 module.exports =  Post ;
+=======
+module.exports = { Post };
+>>>>>>> c8d1fd0 (Initial commit)

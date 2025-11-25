@@ -127,11 +127,18 @@ body {
 }
 .modal-content {
   background: #fff;
+<<<<<<< HEAD
   padding: 24px;
   border-radius: 16px;
   width: 92%;
   max-width: 720px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+=======
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+>>>>>>> c8d1fd0 (Initial commit)
 }
 .modal-content h3 {
   text-align: center;
@@ -177,6 +184,7 @@ body {
 }
 .edit-fields input,
 .edit-fields textarea {
+<<<<<<< HEAD
   margin-bottom: 12px;
   padding: 12px;
   border-radius: 10px;
@@ -195,6 +203,12 @@ body {
 }
 .post-modal-content .modal-actions {
   margin-top: 12px;
+=======
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+>>>>>>> c8d1fd0 (Initial commit)
 }
 .edit-fields label.file-btn {
   text-align: center;

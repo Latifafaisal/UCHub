@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 
+<<<<<<< HEAD
 // 1. Use Environment Variables for all credentials
 const sequelize = new Sequelize(
   process.env.DB_NAME,       // Database Name (from Aiven)
@@ -21,5 +22,16 @@ const sequelize = new Sequelize(
     }
   }
 );
+=======
+const sequelize = new Sequelize('clubhub', 'root', 'latifa2003', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false
+});
+
+sequelize.authenticate()
+  .then(() => console.log('Database connected...'))
+  .catch(err => console.error('Unable to connect:', err));
+>>>>>>> c8d1fd0 (Initial commit)
 
 module.exports = { sequelize };

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "clubhub",
   "version": "1.0.0",
   "description": "Your full-stack Node.js application",
@@ -23,5 +24,16 @@
     "nodemailer": "^7.0.6",
     "sequelize": "^6.37.7",
     "socket.io": "^4.8.1"
+=======
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.0",
+    "sequelize": "^6.37.7"
+>>>>>>> c8d1fd0 (Initial commit)
   }
 }

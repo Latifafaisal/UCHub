@@ -1,4 +1,5 @@
 :root {
+<<<<<<< HEAD
   --primary: #1E3A8A; /* Navy */
   --accent: #2563EB;  /* Royal Blue */
   --secondary: #F3F4F6; /* Light Gray */
@@ -10,11 +11,21 @@
   --text: #111827;
   --radius: 12px;
   --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+=======
+  --primary: #4a90e2;
+  --secondary: #50c9c3;
+  --danger: #ff4d4d;
+  --gray: #f8f9fb;
+  --dark: #333;
+  --text: #555;
+  --radius: 12px;
+>>>>>>> c8d1fd0 (Initial commit)
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, sans-serif;
+<<<<<<< HEAD
   background: var(--bg);
   color: var(--text);
 }
@@ -32,6 +43,12 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
 @keyframes floatOrb { 0% { transform: translateY(0);} 50% { transform: translateY(-10px);} 100% { transform: translateY(0);} }
 
+=======
+  background: var(--gray);
+  color: var(--dark);
+}
+
+>>>>>>> c8d1fd0 (Initial commit)
 /* ===== Navbar ===== */
 .navbar {
   width: 100%;
@@ -69,7 +86,11 @@ body {
 /* ===== Banner ===== */
 .banner {
   height: 180px;
+<<<<<<< HEAD
   background: linear-gradient(135deg, var(--accent), var(--primary));
+=======
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+>>>>>>> c8d1fd0 (Initial commit)
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -180,17 +201,28 @@ body {
 .file-btn input { display:none; }
 .modal-actions { display:flex; justify-content:flex-end; gap:10px; }
 .modal-actions .btn { padding:0.6rem 1.2rem; border:none; }
+<<<<<<< HEAD
 .save-btn { background: var(--success); }
 .cancel-btn { background: var(--danger); }
+=======
+.save-btn { background:#4CAF50; }
+.cancel-btn { background:#f44336; }
+>>>>>>> c8d1fd0 (Initial commit)
 
 /* ===== Add Post ===== */
 .add-post {
   max-width: 900px;
   margin: 20px auto;
   padding: 15px;
+<<<<<<< HEAD
   border: 1px solid #e5e7eb;
   border-radius: var(--radius);
   background: var(--secondary);
+=======
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  background: #fafafa;
+>>>>>>> c8d1fd0 (Initial commit)
   text-align: center;
 }
 .add-post textarea {
@@ -221,7 +253,11 @@ body {
 }
 .posts-feed .post {
   background: #fff;
+<<<<<<< HEAD
   border: 1px solid #e5e7eb;
+=======
+  border: 1px solid #ddd;
+>>>>>>> c8d1fd0 (Initial commit)
   border-radius: var(--radius);
   padding: 15px;
   margin-bottom: 15px;
