@@ -1,5 +1,6 @@
 # Chubhub
 **Team Members:** Latifah Bin Saeed , Raneem Bin Tuwaym, Lama Alasgah, Jana Bin Ekresh, Aldanah Alhumali
+
 **Advisor:** Prof. Iman AlMomani
 
 Chubhub is a comprehensive web application for managing university club activities, built with Node.js, Express, MySQL (Sequelize ORM), and Socket.io for real-time messaging. It supports multiple user roles including students, clubs, administrators, and deans, providing a platform for club registration, event management, membership applications, and communication.
