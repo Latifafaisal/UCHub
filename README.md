@@ -38,18 +38,18 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 # Database Configuration (update with your MySQL credentials)
-MYSQLDATABASE=Clubhub
+MYSQLDATABASE=UCHub
 MYSQLUSER=root
 MYSQLPASSWORD=your_mysql_password_here
 MYSQLHOST=localhost
 MYSQLPORT=3306
 
 # Admin Account (used to create initial admin user)
-ADMIN_EMAIL=admin@university.edu
+ADMIN_EMAIL=admin@clubhub.com
 ADMIN_PASS=admin123
 
 # Dean Account (used to create initial dean user)
-DEAN_EMAIL=dean@university.edu
+DEAN_EMAIL=dean@clubhub.com
 DEAN_PASS=dean123
 
 # Email Configuration (for notifications)
@@ -69,7 +69,7 @@ NODE_ENV=development
 ### 4. Database Setup
 1. Create the database:
    - Open MySQL Workbench or command line
-   - Create database: `CREATE DATABASE Chubhub;`
+   - Create database: `CREATE DATABASE UCHub;`
 
 2. The application will automatically create tables and seed initial users when started.
 
