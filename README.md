@@ -1,4 +1,4 @@
-# Chubhub
+# UCHub
 **Team Members:** Latifah Bin Saeed , Raneem Bin Tuwaym, Lama Alasgah, Jana Bin Ekresh, Aldanah Alhumali
 
 **Advisor:** Prof. Iman AlMomani
